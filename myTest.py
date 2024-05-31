@@ -10,11 +10,11 @@ def install(param_dict):
     SCRIPTDIR = os.path.abspath(os.path.dirname(sys.argv[0]))
     bug_info = myProject.get_bug_info(param_dict)
 
-    if not os.path.isdir(os.path.join(param_dict['output'], bug_info['repo_name'])):
+    if not os.path.isdir(param_dict['output']):
         print("can't find the project folder")
         exit()
     
-    proj_path = os.path.join(param_dict['output'], bug_info['repo_name'])
+    proj_path = param_dict['output']
 
     sp.call(['php', '-r', 'copy("https://getcomposer.org/installer", "composer-setup.php");'], shell=False, cwd=proj_path)
     sp.call(['php', '-r', "if (hash_file('sha384', 'composer-setup.php') === file_get_contents('https://composer.github.io/installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"], shell=False, cwd=proj_path)
@@ -57,7 +57,7 @@ def run_all_test(param_dict):
     SCRIPTDIR = os.path.abspath(os.path.dirname(sys.argv[0]))
     bug_info = myProject.get_bug_info(param_dict)
 
-    if(not os.path.isdir(os.path.join(param_dict['output'], bug_info['repo_name']))):
+    if(not os.path.isdir(param_dict['output'])):
         print("can't find the project folder")
         exit()
     
@@ -72,7 +72,7 @@ def run_all_test(param_dict):
         try:
             # print(test_script_cmd)
             # sp.call(test_script_cmd, shell=True, cwd=os.path.join(param_dict['output'], bug_info['repo_name']))
-            outs, errs = sp.Popen(test_script_cmd, shell=True, cwd=os.path.join(param_dict['output'], bug_info['repo_name']), 
+            outs, errs = sp.Popen(test_script_cmd, shell=True, cwd=param_dict['output'], 
                                   universal_newlines=True, stdout=sp.PIPE, stderr=sp.PIPE).communicate()
             index = _.find_last_index(outs.split('\n'), lambda x: ('FAILURES!' in x) or ('ERRORS!' in x) or ('OK' in x))
             print(outs.split('\n')[index])
@@ -86,7 +86,7 @@ def run_single_test_case(param_dict):
     SCRIPTDIR = os.path.abspath(os.path.dirname(sys.argv[0]))
     bug_info = myProject.get_bug_info(param_dict)
 
-    if(not os.path.isdir(os.path.join(param_dict['output'], bug_info['repo_name']))):
+    if(not os.path.isdir(param_dict['output'])):
         print("can't find the project folder")
         exit()
     
@@ -104,7 +104,7 @@ def run_single_test_case(param_dict):
     
     try:
         # print(test_script_cmd)
-        sp.call(test_script_cmd, shell=True, cwd=os.path.join(param_dict['output'], bug_info['repo_name']))
+        sp.call(test_script_cmd, shell=True, cwd=param_dict['output'])
     except Exception as e:
         print(e)
         
@@ -121,7 +121,7 @@ def run_all_failing_test(param_dict):
     SCRIPTDIR = os.path.abspath(os.path.dirname(sys.argv[0]))
     bug_info = myProject.get_bug_info(param_dict)
 
-    if(not os.path.isdir(os.path.join(param_dict['output'], bug_info['repo_name']))):
+    if(not os.path.isdir(param_dict['output'])):
         print("can't find the project folder")
         exit()
     
@@ -134,7 +134,7 @@ def run_all_failing_test(param_dict):
             test_script_cmd = 'vendor/bin/' + bug_info['test_framework'] + ' --filter ' + test_case_chunck
     
         try:
-            outs, errs = sp.Popen(test_script_cmd, shell=True, cwd=os.path.join(param_dict['output'], bug_info['repo_name']), 
+            outs, errs = sp.Popen(test_script_cmd, shell=True, cwd=param_dict['output'], 
                                   universal_newlines=True, stdout=sp.PIPE, stderr=sp.PIPE).communicate()
             index = _.find_last_index(outs.split('\n'), lambda x: ('FAILURES!' in x) or ('ERRORS!' in x) or ('OK' in x))
             print(outs.split('\n')[index])
