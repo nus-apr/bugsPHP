@@ -1,0 +1,8 @@
+FROM rshariffdeen/darjeeling
+ADD . /setup/bugsphp/magento--magento2/magento--magento2-5/
+RUN sudo bash -c 'groupadd -g 1011 cerberus' 
+RUN sudo bash -c "cut -d: -f1 /etc/passwd | xargs -i usermod -g cerberus {} "
+COPY --from=bugsphp-magento--magento2-magento--magento2-5 --chown=darjeeling:cerberus /experiment /experiment
+COPY --from=bugsphp-magento--magento2-magento--magento2-5 --chown=darjeeling:cerberus /logs /logs
+COPY --from=bugsphp-magento--magento2-magento--magento2-5 --chown=darjeeling:cerberus /root/ /home/darjeeling/
+ENTRYPOINT ["/bin/sh"]
