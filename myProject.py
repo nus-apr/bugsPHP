@@ -54,7 +54,7 @@ def extract_repo(bug_info, folder):
     if os.path.isdir(folder):
         rm_cmd = "rm -R "+str(folder)
         sp.call(rm_cmd, shell=True, stdout=sp.DEVNULL, stderr=sp.STDOUT)
-    os.makedirs(folder)
+    os.makedirs(folder, exist_ok=True)
 
     os.chdir(folder)
     extract_cmd = "7z x " + SCRIPTDIR + "/repositories.7z " + "-o" + folder + " " + os.path.join("test_repositories", bug_info['repo_owner'] + "--" + bug_info['repo_name'], bug_info['repo_name']) + "/*.* -r -y"
