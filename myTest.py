@@ -15,7 +15,7 @@ def install(param_dict):
         exit()
     
     proj_path = param_dict['output']
-
+    print(proj_path)
     sp.call(['php', '-r', 'copy("https://getcomposer.org/installer", "composer-setup.php");'], shell=False, cwd=proj_path)
     sp.call(['php', '-r', "if (hash_file('sha384', 'composer-setup.php') === file_get_contents('https://composer.github.io/installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"], shell=False, cwd=proj_path)
     sp.call(["php", "composer-setup.php"], shell=False, cwd=proj_path)
@@ -139,6 +139,7 @@ def run_all_failing_test(param_dict):
             index = _.find_last_index(outs.split('\n'), lambda x: ('FAILURES!' in x) or ('ERRORS!' in x) or ('OK' in x))
             print(outs.split('\n')[index])
             print(outs.split('\n')[index+1])
-            print('')
+            print("out:\n", outs)
+            print("err:\n", errs)
         except Exception as e:
             print(e)
